@@ -220,14 +220,12 @@ async def read_text(file: UploadFile = File(...)):
 async def detect_colors(file: UploadFile = File(...)):
     """Detect dominant colors in the image"""
     try:
-        if not GEMINI_API_KEY:
-            raise HTTPException(status_code=500, detail="Gemini API key not configured")
+        if not genai_model:
+            raise HTTPException(status_code=500, detail="Gemini AI model not available")
             
         image_data = await file.read()
         image = Image.open(io.BytesIO(image_data))
         image = optimize_image(image)
-        
-        model = genai.GenerativeModel('gemini-1.5-flash')
         
         prompt = """
         You are helping a visually impaired person understand colors in their environment.
@@ -241,7 +239,7 @@ async def detect_colors(file: UploadFile = File(...)):
         Speak clearly and be descriptive about the colors as if helping someone visualize their surroundings.
         """
         
-        response = model.generate_content([prompt, image])
+        response = genai_model.generate_content([prompt, image])
         color_description = response.text
         
         # Save to history
