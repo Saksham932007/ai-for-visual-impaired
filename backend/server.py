@@ -112,14 +112,12 @@ async def detect_objects(file: UploadFile = File(...)):
 async def detect_currency(file: UploadFile = File(...)):
     """Detect currency and monetary amounts in image"""
     try:
-        if not GEMINI_API_KEY:
-            raise HTTPException(status_code=500, detail="Gemini API key not configured")
+        if not genai_model:
+            raise HTTPException(status_code=500, detail="Gemini AI model not available")
             
         image_data = await file.read()
         image = Image.open(io.BytesIO(image_data))
         image = optimize_image(image)
-        
-        model = genai.GenerativeModel('gemini-1.5-flash')
         
         prompt = """
         You are helping a visually impaired person identify money and currency. 
@@ -134,7 +132,7 @@ async def detect_currency(file: UploadFile = File(...)):
         Speak as if you're directly helping them handle their money safely.
         """
         
-        response = model.generate_content([prompt, image])
+        response = genai_model.generate_content([prompt, image])
         description = response.text
         
         # Try to extract specific amounts
