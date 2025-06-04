@@ -25,8 +25,15 @@ app.add_middleware(
 
 # Configure Gemini
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
+genai_model = None
 if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        genai_model = genai.GenerativeModel('gemini-1.5-flash')
+        print("✅ Gemini AI configured successfully")
+    except Exception as e:
+        print(f"❌ Failed to configure Gemini AI: {e}")
+        genai_model = None
 
 # MongoDB connection
 MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017/')
