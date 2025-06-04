@@ -62,13 +62,13 @@ async def detect_objects(file: UploadFile = File(...)):
         if not GEMINI_API_KEY:
             raise HTTPException(status_code=500, detail="Gemini API key not configured")
             
+        if not genai_model:
+            raise HTTPException(status_code=500, detail="Gemini AI model not available")
+            
         # Read and process image
         image_data = await file.read()
         image = Image.open(io.BytesIO(image_data))
         image = optimize_image(image)
-        
-        # Initialize Gemini model
-        model = genai.GenerativeModel('gemini-1.5-flash')
         
         # Object detection prompt optimized for accessibility
         prompt = """
@@ -84,7 +84,7 @@ async def detect_objects(file: UploadFile = File(...)):
         Start with the most important things they should know about first.
         """
         
-        response = model.generate_content([prompt, image])
+        response = genai_model.generate_content([prompt, image])
         description = response.text
         
         # Save to history
