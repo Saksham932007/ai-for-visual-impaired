@@ -174,14 +174,12 @@ async def detect_currency(file: UploadFile = File(...)):
 async def read_text(file: UploadFile = File(...)):
     """Extract and read text from image using OCR"""
     try:
-        if not GEMINI_API_KEY:
-            raise HTTPException(status_code=500, detail="Gemini API key not configured")
+        if not genai_model:
+            raise HTTPException(status_code=500, detail="Gemini AI model not available")
             
         image_data = await file.read()
         image = Image.open(io.BytesIO(image_data))
         image = optimize_image(image)
-        
-        model = genai.GenerativeModel('gemini-1.5-flash')
         
         prompt = """
         You are helping a visually impaired person read text. 
@@ -195,7 +193,7 @@ async def read_text(file: UploadFile = File(...)):
         Present the text as if you're reading it aloud to help them understand the content.
         """
         
-        response = model.generate_content([prompt, image])
+        response = genai_model.generate_content([prompt, image])
         text_content = response.text
         
         # Save to history
