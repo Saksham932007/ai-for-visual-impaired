@@ -12,8 +12,8 @@ from datetime import datetime
 import json
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Load environment variables from the backend directory
+load_dotenv('/app/backend/.env')
 
 # Initialize FastAPI app
 app = FastAPI()
