@@ -105,8 +105,9 @@ async def detect_objects(file: UploadFile = File(...)):
         }
         
     except Exception as e:
-        print(f"Object detection error: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Object detection failed: {str(e)}")
+        error_msg = f"Object detection failed: {str(e)}"
+        print(f"Object detection error: {error_msg}")
+        raise HTTPException(status_code=500, detail=error_msg)
 
 @app.post("/api/vision/currency")
 async def detect_currency(file: UploadFile = File(...)):
