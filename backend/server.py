@@ -10,6 +10,10 @@ from pymongo import MongoClient
 import uuid
 from datetime import datetime
 import json
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI()
