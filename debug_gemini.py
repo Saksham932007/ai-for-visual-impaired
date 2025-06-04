@@ -4,6 +4,10 @@ import sys
 import os
 sys.path.append('/app/backend')
 
+# Load dotenv manually
+from dotenv import load_dotenv
+load_dotenv('/app/backend/.env')
+
 # Test the import and Gemini setup
 try:
     print("Testing imports...")
@@ -16,6 +20,8 @@ try:
     # Test API key
     api_key = os.environ.get('GEMINI_API_KEY')
     print(f"API Key present: {'Yes' if api_key else 'No'}")
+    if api_key:
+        print(f"API Key starts with: {api_key[:10]}...")
     
     if api_key:
         print("Configuring Gemini...")
